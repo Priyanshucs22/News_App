@@ -153,14 +153,16 @@ async function fetchNews(query = CONFIG.DEFAULT_QUERY, country = null, page = 1)
         query = query ? Utils.sanitizeInput(query.trim()) : CONFIG.DEFAULT_QUERY;
         country = country ? Utils.sanitizeInput(country.trim()) : null;
 
-        // Build API URL with pagination
+        // Build API URL with pagination - using CORS proxy for GitHub Pages
         let apiUrl;
+        const corsProxy = "https://cors-anywhere.herokuapp.com/";
+
         if (country) {
             // Use headlines endpoint for country-specific news
-            apiUrl = `${CONFIG.HEADLINES_URL}?country=${country.toLowerCase()}&pageSize=${AppState.articlesPerPage}&page=${page}&apiKey=${CONFIG.API_KEY}`;
+            apiUrl = `${corsProxy}${CONFIG.HEADLINES_URL}?country=${country.toLowerCase()}&pageSize=${AppState.articlesPerPage}&page=${page}&apiKey=${CONFIG.API_KEY}`;
         } else {
             // Use everything endpoint for search queries
-            apiUrl = `${CONFIG.BASE_URL}?q=${encodeURIComponent(query)}&pageSize=${AppState.articlesPerPage}&page=${page}&sortBy=publishedAt&apiKey=${CONFIG.API_KEY}`;
+            apiUrl = `${corsProxy}${CONFIG.BASE_URL}?q=${encodeURIComponent(query)}&pageSize=${AppState.articlesPerPage}&page=${page}&sortBy=publishedAt&apiKey=${CONFIG.API_KEY}`;
         }
 
         // Use retry mechanism for better reliability
