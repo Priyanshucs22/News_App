@@ -153,16 +153,18 @@ async function fetchNews(query = CONFIG.DEFAULT_QUERY, country = null, page = 1)
         query = query ? Utils.sanitizeInput(query.trim()) : CONFIG.DEFAULT_QUERY;
         country = country ? Utils.sanitizeInput(country.trim()) : null;
 
-        // Build API URL with pagination - using CORS proxy for GitHub Pages
+        // Build API URL with pagination - using working CORS proxy
         let apiUrl;
-        const corsProxy = "https://cors-anywhere.herokuapp.com/";
+        const corsProxy = "https://api.allorigins.win/raw?url=";
 
         if (country) {
             // Use headlines endpoint for country-specific news
-            apiUrl = `${corsProxy}${CONFIG.HEADLINES_URL}?country=${country.toLowerCase()}&pageSize=${AppState.articlesPerPage}&page=${page}&apiKey=${CONFIG.API_KEY}`;
+            const originalUrl = `${CONFIG.HEADLINES_URL}?country=${country.toLowerCase()}&pageSize=${AppState.articlesPerPage}&page=${page}&apiKey=${CONFIG.API_KEY}`;
+            apiUrl = `${corsProxy}${encodeURIComponent(originalUrl)}`;
         } else {
             // Use everything endpoint for search queries
-            apiUrl = `${corsProxy}${CONFIG.BASE_URL}?q=${encodeURIComponent(query)}&pageSize=${AppState.articlesPerPage}&page=${page}&sortBy=publishedAt&apiKey=${CONFIG.API_KEY}`;
+            const originalUrl = `${CONFIG.BASE_URL}?q=${encodeURIComponent(query)}&pageSize=${AppState.articlesPerPage}&page=${page}&sortBy=publishedAt&apiKey=${CONFIG.API_KEY}`;
+            apiUrl = `${corsProxy}${encodeURIComponent(originalUrl)}`;
         }
 
         // Use retry mechanism for better reliability
