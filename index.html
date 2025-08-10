@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Stay updated with the latest news from around the world. Browse by category or search for specific topics.">
+    <meta name="keywords" content="news, world news, politics, sports, finance, technology, breaking news">
+    <meta name="author" content="Daily News App">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Daily News - Latest World News">
+    <meta property="og:description" content="Stay updated with the latest news from around the world">
+    <meta property="og:image" content="./logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Daily News - Latest World News">
+    <meta property="twitter:description" content="Stay updated with the latest news from around the world">
+
+    <title>Daily News - Latest World News</title>
+    <link rel="icon" type="image/png" href="./logo.png">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="main-nav container flex">
+            <div class="daily">
+                <h2>Daily</h2>
+                <a href="#" onclick="reload()" aria-label="Reload page to show latest news">
+                    <img src="logo.png" alt="Daily News Logo" class="logo">
+                </a>
+            </div>
+
+            <!-- Mobile menu toggle -->
+            <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-content">
+                <div class="nav-links">
+                    <ul class="flex" role="menubar" aria-label="News categories">
+                        <li class="hover-link nav-item" id="politics" onclick="onNavItemClick('politics')"
+                            role="menuitem" tabindex="0" aria-label="Browse politics news">Politics</li>
+                        <li class="hover-link nav-item" id="sports" onclick="onNavItemClick('sports')"
+                            role="menuitem" tabindex="0" aria-label="Browse sports news">Sports</li>
+                        <li class="hover-link nav-item" id="finance" onclick="onNavItemClick('finance')"
+                            role="menuitem" tabindex="0" aria-label="Browse finance news">Finance</li>
+                        <li class="hover-link nav-item" id="technology" onclick="onNavItemClick('technology')"
+                            role="menuitem" tabindex="0" aria-label="Browse technology news">Technology</li>
+                    </ul>
+                </div>
+                <div class="search-bar flex" role="search" aria-label="Search news">
+                    <label for="search-text" class="sr-only">Search for news</label>
+                    <input type="text" id="search-text" class="news-input"
+                           placeholder="Search for news (e.g. Science, Technology)"
+                           aria-label="Enter search terms"
+                           autocomplete="off">
+                    <button class="search-button" id="searchButton" aria-label="Search news">Search</button>
+                </div>
+
+                <div class="country" role="combobox" aria-label="Select country for news" aria-expanded="false">
+                    <div class="select-con" tabindex="0" role="button" aria-label="Country selector">
+                        <img id="flag" src="world.png" alt="Selected country flag">
+                       <p id="conName">World</p>
+                     </div>
+                    <ul role="listbox" aria-label="Country options">
+                        <li role="option">
+                            <a href="#" id="in" aria-label="Get news from India">India</a>
+                        </li>
+                        <li role="option">
+                            <a href="#" id="us" aria-label="Get news from USA">USA</a>
+                        </li>
+                        <li role="option">
+                            <a href="#" id="fr" aria-label="Get news from France">France</a>
+                        </li>
+                        <li role="option">
+                            <a href="#" id="ru" aria-label="Get news from Russia">Russia</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <main role="main" aria-label="News articles">
+        <div class="cards-container container flex" id="cards-container"
+             aria-live="polite" aria-label="News articles list">
+            <!-- News articles will be loaded here -->
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-container container" id="pagination-container" style="display: none;">
+            <div class="pagination" role="navigation" aria-label="Article pagination">
+                <button id="prev-page" class="pagination-btn" aria-label="Previous page" disabled>
+                    ← Previous
+                </button>
+                <div class="page-info">
+                    <span id="current-page">1</span> of <span id="total-pages">1</span>
+                </div>
+                <button id="next-page" class="pagination-btn" aria-label="Next page" disabled>
+                    Next →
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Article Preview Modal -->
+    <div id="article-modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Article Preview</h2>
+                <button class="modal-close" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img id="modal-image" src="" alt="Article image" loading="lazy">
+                <h3 id="modal-article-title"></h3>
+                <p id="modal-article-source"></p>
+                <p id="modal-article-description"></p>
+                <div class="modal-actions">
+                    <a id="modal-read-full" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                        Read Full Article
+                    </a>
+                    <div class="social-share">
+                        <span>Share:</span>
+                        <button id="share-twitter" class="share-btn" aria-label="Share on Twitter">🐦</button>
+                        <button id="share-facebook" class="share-btn" aria-label="Share on Facebook">📘</button>
+                        <button id="share-linkedin" class="share-btn" aria-label="Share on LinkedIn">💼</button>
+                        <button id="share-copy" class="share-btn" aria-label="Copy link">📋</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <template id="template-news-card">
+        <article class="card" role="article" tabindex="0">
+            <div class="card-header">
+                <img id="news-img" src="https://via.placeholder.com/400X200" alt="Article image" loading="lazy">
+            </div>
+            <div class="card-content">
+                <h3 id="news-title" class="news-title">
+                    Article Title
+                </h3>
+                <h6 id="news-source" class="news-source">
+                    Source • Date
+                </h6>
+                <p class="news-desc" id="news-desc">
+                    Article description will appear here...
+                </p>
+                <div class="card-actions">
+                    <button class="preview-btn" aria-label="Preview article">👁️ Preview</button>
+                    <button class="share-btn-card" aria-label="Share article">📤 Share</button>
+                </div>
+            </div>
+        </article>
+    </template>
+    <script src="script.js"></script>
+</body>
+
+</html>
